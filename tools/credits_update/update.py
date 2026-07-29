@@ -125,7 +125,7 @@ def main():
 
     merged_credits_v3 = mod_credits + credits_latest
     merged_credits_v2 = mod_credits_disciplines + credits_v2
-    merged_credits_v1 = convert_to_text(mod_credits_disciplines) + '\n\n\n' + credits_v1
+    merged_credits_v1 = convert_to_text(mod_credits_disciplines) + '\n' + credits_v1
 
     print('Dumping credits')
     dump_json_or_text(CREDITS_JSON_V3, merged_credits_v3)
