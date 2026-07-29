@@ -60,7 +60,7 @@ def download_credits(version: str | None = None) -> list:
 def download_credits_txt(version: str) -> str:
     return _get_client_resource(
         version, 'assets/minecraft/texts/credits.txt',
-        func=lambda x: x, check=lambda _: None
+        func=lambda x: x.read().decode('utf-8'), check=lambda _: None
     )
 
 
@@ -76,7 +76,7 @@ def dump_json_or_text(path: str, data: str | dict | list):
         if isinstance(data, str):
             f.write(data)
         else:
-            json.dump(data, f)
+            json.dump(data, f, indent=2, ensure_ascii=False)
 
 
 def convert_to_text(data_list: list) -> str:
@@ -100,12 +100,22 @@ def convert_to_text(data_list: list) -> str:
     return "\n".join(lines)
 
 
+def v3_to_v2(disciplines_v3: list) -> list:
+    disciplines_v3 = json.loads(json.dumps(disciplines_v3))
+    ret = []
+    for discipline in disciplines_v3:
+        section_name = discipline['discipline']
+        del discipline['discipline']
+        ret.append({'section': section_name, **discipline})
+    return ret
+
 def main():
     mod_credits = read_json_list(MOD_CREDITS_JSON)
     if len(mod_credits) != 1 or (not isinstance(mod_credits[0], dict)):
         raise ValueError('Invalid mod credits')
     mod_credits_disciplines = mod_credits[0].get('disciplines')
     _assert_is_list(mod_credits_disciplines, 'disciplines')
+    mod_credits_disciplines = v3_to_v2(mod_credits_disciplines)
     
     print('Downloading credits from latest, 1.19.4, 1.16.5')
     credits_latest = download_credits()
