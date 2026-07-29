@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+'''
+Derive credits.json and credits.txt from mod_credits.json and the vanilla credits.
+
+mod_credits.json follows the format of End Poem Extension Mod (https://modrinth.com/mod/end-poem-extension).
+This indicates that when EPX is loaded, mod_credits.json is loaded instead, to avoid potential cross-mod conflicts.
+'''
 import json
 import os
 import sys
